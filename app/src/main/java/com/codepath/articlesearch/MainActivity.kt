@@ -24,16 +24,29 @@ fun createJson() = Json {
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
+    val days = ArrayList<Day>()
+    private lateinit var articlelist:ArticleListFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        articlelist = ArticleListFragment()
+        days.add(Day(1,2,3,4,5))
+        days.add(Day(2,4,3,4,5))
+        days.add(Day(3,6,9,12,13))
+        days.add(Day(4,5,6,7,8))
+        days.add(Day(5,10,15,20,30))
+        days.add(Day(6,10,15,20,30))
+        days.add(Day(7,10,15,20,30))
+        days.add(Day(8,10,15,20,30))
 
+        articlelist.days = days
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnItemReselectedListener{
-            if(it.itemId == R.id.nav_articles) replaceFragment(ArticleListFragment())
-            else replaceFragment(BestSellerBooksFragment())
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnItemSelectedListener{
+
+            if(it.itemId == R.id.nav_articles) replaceFragment(articlelist)
+            else replaceFragment(BestSellerBooksFragment(days))
+            true
 
         }
         findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.nav_articles

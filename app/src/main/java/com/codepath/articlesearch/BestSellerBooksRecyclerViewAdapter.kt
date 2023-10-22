@@ -33,9 +33,9 @@ class BestSellerBooksRecyclerViewAdapter(
     inner class BookViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mBookTitle: TextView = mView.findViewById<View>(id.book_title) as TextView
         val mBookAuthor: TextView = mView.findViewById<View>(id.book_author) as TextView
-        val mBookRanking: TextView = mView.findViewById<View>(id.ranking) as TextView
-        val mBookDescription: TextView = mView.findViewById<View>(id.book_description) as TextView
-        val mBookImage: ImageView = mView.findViewById<View>(id.book_image) as ImageView
+        val mBookRanking: TextView = mView.findViewById<View>(id.book_title) as TextView
+        val mBookDescription: TextView = mView.findViewById<View>(id.book_title) as TextView
+//        val mBookImage: ImageView = mView.findViewById<View>(id.book_title) as ImageView
         var mItem: BestSellerBook? = null
 
         override fun toString(): String {
@@ -55,10 +55,10 @@ class BestSellerBooksRecyclerViewAdapter(
         holder.mBookDescription.text = book.description
         holder.mBookRanking.text = book.rank.toString()
 
-        Glide.with(holder.mView)
-            .load(book.bookImageUrl)
-            .centerInside()
-            .into(holder.mBookImage)
+//        Glide.with(holder.mView)
+//            .load(book.bookImageUrl)
+//            .centerInside()
+//            .into(holder.mBookImage)
 
         holder.mView.setOnClickListener {
             holder.mItem?.let { book ->

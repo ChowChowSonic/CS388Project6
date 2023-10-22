@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
@@ -18,14 +19,11 @@ private const val SEARCH_API_KEY = BuildConfig.API_KEY
 private const val ARTICLE_SEARCH_URL =
     "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=${SEARCH_API_KEY}"
 class ArticleListFragment : Fragment() {
-    private val articles = mutableListOf<Article>()
-    private lateinit var articlesRecyclerView: RecyclerView
-    private lateinit var articleAdapter: ArticleAdapter
-
+    lateinit var layoutview: View
+    var days: ArrayList<Day> = ArrayList()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Call the new method within onViewCreated
-        fetchArticles()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,18 +36,36 @@ class ArticleListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         // Change this statement to store the view in a variable instead of a return statement
-        val view = inflater.inflate(R.layout.fragment_article_list, container, false)
+        layoutview = inflater.inflate(R.layout.fragment_article_list, container, false)
 
         // Add these configurations for the recyclerView and to configure the adapter
-        val layoutManager = LinearLayoutManager(context)
-        articlesRecyclerView = view.findViewById(R.id.article_recycler_view)
-        articlesRecyclerView.layoutManager = layoutManager
-        articlesRecyclerView.setHasFixedSize(true)
-        articleAdapter = ArticleAdapter(view.context, articles)
-        articlesRecyclerView.adapter = articleAdapter
+        var avgcals = 12
+        var avgsteps = 26
+        var avgsleepHrs = 8
 
+        for(d in days){
+                avgcals+=d.caloriesEaten
+                avgsteps+=d.steps
+                avgsleepHrs+=d.sleepHrs
+        }
+        layoutview.findViewById<TextView>(R.id.summary).text = avgcals.toString() + " total Calories Eaten, \n" +
+                avgsteps + " total Steps taken, \n" + avgsleepHrs + " total Hours slept"
         // Update the return statement to return the inflated view from above
-        return view
+        return layoutview
+    }
+
+    fun update(){
+        var avgcals = 0
+        var avgsteps = 0
+        var avgsleepHrs = 0
+        for(d in days){
+            avgcals+=d.caloriesEaten
+            avgsteps+=d.steps
+            avgsleepHrs+=d.sleepHrs
+        }
+        layoutview.findViewById<TextView>(R.id.summary).text = avgcals.toString() + " total Calories Eaten, \n" +
+                avgsteps + " total Steps taken, \n" + avgsleepHrs + " total Hours slept"
+
     }
 
     private fun fetchArticles() {
@@ -72,8 +88,8 @@ class ArticleListFragment : Fragment() {
                         json.jsonObject.toString()
                     )
                     parsedJson.response?.docs?.let { list ->
-                        articles.addAll(list)
-                        articleAdapter.notifyDataSetChanged()
+//                        days.addAll(list)
+//                        articleAdapter.notifyDataSetChanged()
                     }
                 } catch (e: JSONException) {
                     Log.e(TAG, "Exception: $e")
@@ -83,9 +99,4 @@ class ArticleListFragment : Fragment() {
         })
     }
 
-    companion object {
-        fun newInstance(): ArticleListFragment {
-            return ArticleListFragment()
-        }
-    }
 }
